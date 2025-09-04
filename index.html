@@ -1,111 +1,111 @@
 <!DOCTYPE html>
 <html>
 <head>
- <title>Рандомайзер цветов</title>
- <style>
- body {
- font-family: Arial, sans-serif;
- text-align: center;
- margin-top: 50px;
- }
- #colorBox {
- width: 200px;
- height: 200px;
- margin: 20px auto;
- border: 2px solid #333;
- }
- button {
- padding: 10px 20px;
- font-size: 16px;
- cursor: pointer;
- }
- #history {
- margin-top: 20px;
- text-align: left;
- padding: 10px;
- border: 1px solid #ccc;
- }
- </style>
+    <title>Рандомайзер цветов</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        #colorBox {
+            width: 200px;
+            height: 200px;
+            margin: 20px auto;
+            border: 2px solid #333;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        #history {
+            margin-top: 20px;
+            text-align: left;
+            padding: 10px;
+            border: 1px solid #ccc;
+        }
+    </style>
 </head>
 <body>
- <div id="colorBox"></div>
- <h2 id="colorName"></h2>
- <input type="text" id="userNameInput" placeholder="Введите ваше имя">
- <button onclick="randomColor()">Крутить</button>
- <div id="history"></div>
+    <div id="colorBox"></div>
+    <h2 id="colorName"></h2>
+    <input type="text" id="userNameInput" placeholder="Введите ваше имя">
+    <button onclick="randomColor()">Крутить</button>
+    <div id="history"></div>
 
- <script>
- // Массив из 7 основных цветов
- const colors = [
- { name: 'Красный', code: '#FF0000' },
- { name: 'Оранжевый', code: '#FFA500' },
- { name: 'Жёлтый', code: '#FFFF00' },
- { name: 'Зелёный', code: '#008000' },
- { name: 'Голубой', code: '#00BFFF' },
- { name: 'Синий', code: '#0000FF' },
- { name: 'Фиолетовый', code: '#800080' }
- ];
- 
- // Загружаем историю из localStorage
- let history = JSON.parse(localStorage.getItem('colorHistory')) || [];
+    <script>
+        // Массив из 7 основных цветов
+        const colors = [
+            { name: 'Красный', code: '#FF0000' },
+            { name: 'Оранжевый', code: '#FFA500' },
+            { name: 'Жёлтый', code: '#FFFF00' },
+            { name: 'Зелёный', code: '#008000' },
+            { name: 'Голубой', code: '#00BFFF' },
+            { name: 'Синий', code: '#0000FF' },
+            { name: 'Фиолетовый', code: '#800080' }
+        ];
 
- function randomColor() {
- const userName = document.getElementById('userNameInput').value;
- const now = new Date();
- const formattedDate = now.toLocaleString('ru-RU', {
- year: 'numeric',
- month: '2-digit',
- day: '2-digit',
- hour: '2-digit',
- minute: '2-digit',
- second: '2-digit'
- });
- 
- if (!userName) {
- alert('Пожалуйста, введите ваше имя');
- return;
- }
- 
- const randomIndex = Math.floor(Math.random() * colors.length);
- const selectedColor = colors[randomIndex];
- 
- // Обновляем интерфейс
- document.getElementById('colorBox').style.backgroundColor = selectedColor.code;
- document.getElementById('colorName').innerText = `Выпал цвет: ${selectedColor.name}`;
- 
- // Добавляем запись в историю
- history.push({
- name: userName,
- color: selectedColor.name,
- date: formattedDate
- });
- 
- // Сохраняем историю в localStorage
- localStorage.setItem('colorHistory', JSON.stringify(history));
- 
- // Обновляем отображение истории
- updateHistory();
- 
- // Очищаем поле ввода
- document.getElementById('userNameInput').value = '';
- }
+        // Загружаем историю из localStorage
+        let history = JSON.parse(localStorage.getItem('colorHistory')) || [];
 
- function updateHistory() {
- const historyDiv = document.getElementById('history');
- let historyHtml = '<h3>История:</h3><ul>';
- 
- for(let entry of history) {
- historyHtml += `<li>${entry.name}: ${entry.color} (${entry.date})</li>`;
- }
- 
- historyHtml += '</ul>';
- historyDiv.innerHTML = historyHtml;
- }
- 
- // Загружаем и отображаем сохраненную историю при загрузке страницы
- window.onload = function() {
- updateHistory();
- }
- </script>
+        function randomColor() {
+            const userName = document.getElementById('userNameInput').value;
+            const now = new Date();
+            const formattedDate = now.toLocaleString('ru-RU', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+
+            if (!userName) {
+                alert('Пожалуйста, введите ваше имя');
+                return;
+            }
+
+            const randomIndex = Math.floor(Math.random() * colors.length);
+            const selectedColor = colors[randomIndex];
+
+            // Обновляем интерфейс
+            document.getElementById('colorBox').style.backgroundColor = selectedColor.code;
+            document.getElementById('colorName').innerText = `Выпал цвет: ${selectedColor.name}`;
+
+            // Добавляем запись в историю
+            history.push({
+                name: userName,
+                color: selectedColor.name,
+                date: formattedDate
+            });
+
+            // Сохраняем историю в localStorage
+            localStorage.setItem('colorHistory', JSON.stringify(history));
+
+            // Обновляем отображение истории
+            updateHistory();
+
+            // Очищаем поле ввода
+            document.getElementById('userNameInput').value = '';
+        }
+
+        function updateHistory() {
+            const historyDiv = document.getElementById('history');
+            let historyHtml = '<h3>История:</h3><ul>';
+
+            for(let entry of history) {
+                historyHtml += `<li>${entry.name}: ${entry.color} (${entry.date})</li>`;
+            }
+
+            historyHtml += '</ul>';
+            historyDiv.innerHTML = historyHtml;
+        }
+
+        // Загружаем и отображаем сохраненную историю при загрузке страницы
+        window.onload = function() {
+            updateHistory();
+        }
+    </script>
 </body>
 </html>
