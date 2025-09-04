@@ -1,114 +1,154 @@
 <!DOCTYPE html>
 <html>
 <head>
- <title>Рандомайзер цветов</title>
- <style>
- body {
- font-family: Arial, sans-serif;
- text-align: center;
- margin-top: 50px;
- }
- #colorBox {
- width: 200px;
- height: 200px;
- margin: 20px auto;
- border: 2px solid #333;
- transition: background-color 0.1s linear;
- }
- button {
- padding: 10px 20px;
- font-size: 16px;
- cursor: pointer;
- }
- #history {
- margin-top: 20px;
- text-align: left;
- padding: 10px;
- border: 1px solid #ccc;
- }
- </style>
+    <title>Рандомайзер цветов</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+
+        #colorBox {
+            width: 80%;
+            max-width: 200px;
+            height: auto;
+            padding-top: 80%; /* Соотношение 1:1 */
+            margin: 20px auto;
+            border: 2px solid #333;
+            transition: background-color 0.1s linear;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 10px;
+            border-radius: 5px;
+            border: none;
+            background: #007bff;
+            color: white;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+
+        #history {
+            margin: 20px auto;
+            text-align: left;
+            padding: 10px;
+            border: 1px solid #ccc;
+            width: 90%;
+            max-width: 400px;
+            border-radius: 5px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        }
+
+        input[type="text"] {
+            width: 80%;
+            max-width: 300px;
+            padding: 10px;
+            margin: 10px auto;
+            display: block;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        @media (max-width: 600px) {
+            #colorBox {
+                padding-top: 70%;
+            }
+
+            button {
+                font-size: 14px;
+            }
+
+            #history {
+                font-size: 14px;
+            }
+        }
+    </style>
 </head>
 <body>
- <div id="colorBox"></div>
- <h2 id="colorName"></h2>
- <input type="text" id="userNameInput" placeholder="Введите ваше имя">
- <button onclick="startSpin()">Крутить</button>
- <div id="history"></div>
+    <div id="colorBox"></div>
+    <h2 id="colorName"></h2>
+    <input type="text" id="userNameInput" placeholder="Введите ваше имя">
+    <button onclick="startSpin()">Крутить</button>
+    <div id="history"></div>
 
- <script>
- // Массив из 7 основных цветов
- const colors = [
- { name: 'Красный', code: '#FF0000' },
- { name: 'Оранжевый', code: '#FFA500' },
- { name: 'Жёлтый', code: '#FFFF00' },
- { name: 'Зелёный', code: '#008000' },
- { name: 'Голубой', code: '#00BFFF' },
- { name: 'Синий', code: '#0000FF' },
- { name: 'Фиолетовый', code: '#800080' }
- ];
+    <script>
+        // Массив из 7 основных цветов
+        const colors = [
+            { name: 'Красный', code: '#FF0000' },
+            { name: 'Оранжевый', code: '#FFA500' },
+            { name: 'Жёлтый', code: '#FFFF00' },
+            { name: 'Зелёный', code: '#008000' },
+            { name: 'Голубой', code: '#00BFFF' },
+            { name: 'Синий', code: '#0000FF' },
+            { name: 'Фиолетовый', code: '#800080' }
+        ];
 
- // Загружаем историю из localStorage
- let history = JSON.parse(localStorage.getItem('colorHistory')) || [];
+// Загружаем историю из localStorage
+let history = JSON.parse(localStorage.getItem('colorHistory')) || [];
 
- let spinning = false;
- let spinInterval;
- let finalColorIndex;
+let spinning = false;
+let spinInterval;
+let finalColorIndex;
+let startTime;
 
- function startSpin() {
- if (spinning) return;
- 
- const userName = document.getElementById('userNameInput').value;
- if (!userName) {
- alert('Пожалуйста, введите ваше имя');
- return;
- }
- 
- spinning = true;
- finalColorIndex = Math.floor(Math.random() * colors.length);
- 
- spinInterval = setInterval(() => {
- const randomIndex = Math.floor(Math.random() * colors.length);
- document.getElementById('colorBox').style.backgroundColor = colors[randomIndex].code;
- }, 100);
- 
- setTimeout(() => {
- clearInterval(spinInterval);
- document.getElementById('colorBox').style.backgroundColor = colors[finalColorIndex].code;
- document.getElementById('colorName').innerText = `Выпал цвет: ${colors[finalColorIndex].name}`;
- 
- // Добавляем запись в историю
- history.push({
- name: userName,
- color: colors[finalColorIndex].name,
- date: new Date().toLocaleString('ru-RU')
- });
- 
- // Сохраняем историю в localStorage
- localStorage.setItem('colorHistory', JSON.stringify(history));
- updateHistory();
- 
- // Очищаем поле ввода
- document.getElementById('userNameInput').value = '';
- spinning = false;
- }, 5000); // 5 секунд анимации
- }
+function startSpin() {
+    if (spinning) return;
+    
+    const userName = document.getElementById('userNameInput').value;
+    if (!userName) {
+        alert('Пожалуйста, введите ваше имя');
+        return;
+    }
+    
+    spinning = true;
+    finalColorIndex = Math.floor(Math.random() * colors.length);
+    startTime = Date.now();
+    
+    spinInterval = setInterval(() => {
+        const randomIndex = Math.floor(Math.random() * colors.length);
+        document.getElementById('colorBox').style.backgroundColor = colors[randomIndex].code;
+        
+        if (Date.now() - startTime > 3000) {
+            clearInterval(spinInterval);
+            document.getElementById('colorBox').style.backgroundColor = colors[finalColorIndex].code;
+            document.getElementById('colorName').innerText = colors[finalColorIndex].name;
+            
+            // Добавляем запись в историю
+            history.push({
+                name: userName,
+                color: colors[finalColorIndex].name,
+                date: new Date()
+            });
+            
+            localStorage.setItem('colorHistory', JSON.stringify(history));
+            updateHistory();
+            spinning = false;
+        }
+    }, 100);
+}
 
- function updateHistory() {
- const historyDiv = document.getElementById('history');
- let historyHtml = '<h3>История:</h3><ul>';
- 
- for(let entry of history) {
- historyHtml += `<li>${entry.name}: ${entry.color} (${entry.date})</li>`;
- }
- 
- historyHtml += '</ul>';
- historyDiv.innerHTML = historyHtml;
- }
- 
- // Загружаем и отображаем сохраненную историю при загрузке страницы
- window.onload = function() {
- updateHistory();
- }
- </script>
+function updateHistory() {
+    const historyDiv = document.getElementById('history');
+    historyDiv.innerHTML = '';
+    
+    history.forEach(entry => {
+        const div = document.createElement('div');
+        div.innerText = `${entry.name}: ${entry.color} (${entry.date.toLocaleString()})`;
+        historyDiv.appendChild(div);
+    });
+}
+
+</script>
 </body>
 </html>
