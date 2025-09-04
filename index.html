@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Рандомайзер цветов</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        #colorBox {
+            width: 200px;
+            height: 200px;
+            margin: 20px auto;
+            border: 2px solid #333;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div id="colorBox"></div>
+    <h2 id="colorName"></h2>
+    <button onclick="randomColor()">Крутить</button>
+
+    <script>
+        const colors = [
+            { name: 'Красный', code: '#FF0000' },
+            { name: 'Оранжевый', code: '#FFA500' },
+            { name: 'Жёлтый', code: '#FFFF00' },
+            { name: 'Зелёный', code: '#008000' },
+            { name: 'Голубой', code: '#0000FF' },
+            { name: 'Синий', code: '#0000FF' },
+            { name: 'Фиолетовый', code: '#800080' }
+        ];
+
+        function randomColor() {
+            const randomIndex = Math.floor(Math.random() * colors.length);
+            const selectedColor = colors[randomIndex];
+            
+            document.getElementById('colorBox').style.backgroundColor = selectedColor.code;
+            document.getElementById('colorName').innerText = `Выпал цвет: ${selectedColor.name}`;
+        }
+    </script>
+</body>
+</html>
