@@ -75,7 +75,7 @@
             }
             
             const randomIndex = Math.floor(Math.random() * colors.length);
-            const selectedColor = colors[randomIndex]; // Исправлено обращение к массиву
+            const selectedColor = colors[randomIndex]; // Правильное обращение к массиву
             
             // Обновляем интерфейс
             document.getElementById('colorBox').style.backgroundColor = selectedColor.code;
@@ -104,4 +104,5 @@
             }
             
             historyHtml += '</ul>';
-            history
+            historyDiv.innerHTML = historyHtml;
+        }
