@@ -1,154 +1,207 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
-    <title>Рандомайзер цветов</title>
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Рандомайзер 7 цветов</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            text-align: center;
-            margin: 0;
-            padding: 0;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
             background-color: #f5f5f5;
         }
-
-        #colorBox {
-            width: 80%;
-            max-width: 200px;
-            height: auto;
-            padding-top: 80%; /* Соотношение 1:1 */
-            margin: 20px auto;
-            border: 2px solid #333;
-            transition: background-color 0.1s linear;
-            border-radius: 10px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
-
-        button {
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
-            margin: 10px;
-            border-radius: 5px;
-            border: none;
-            background: #007bff;
-            color: white;
+        h1 {
+            text-align: center;
+            color: #333;
         }
-
-        button:hover {
-            background: #0056b3;
+        .input-group {
+            margin-bottom: 20px;
         }
-
-        #history {
-            margin: 20px auto;
-            text-align: left;
-            padding: 10px;
-            border: 1px solid #ccc;
-            width: 90%;
-            max-width: 400px;
-            border-radius: 5px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
-        }
-
-        input[type="text"] {
-            width: 80%;
-            max-width: 300px;
-            padding: 10px;
-            margin: 10px auto;
+        label {
             display: block;
-            border: 1px solid #ccc;
-            border-radius: 5px;
+            margin-bottom: 5px;
+            font-weight: bold;
         }
-
-        @media (max-width: 600px) {
-            #colorBox {
-                padding-top: 70%;
-            }
-
-            button {
-                font-size: 14px;
-            }
-
-            #history {
-                font-size: 14px;
-            }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            display: block;
+            margin: 0 auto;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .colors-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 20px 0;
+            justify-content: center;
+        }
+        .color-box {
+            width: 80px;
+            height: 80px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.7);
+            font-weight: bold;
+        }
+        .history {
+            margin-top: 30px;
+        }
+        .history-item {
+            background-color: #f9f9f9;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            border-left: 4px solid #4CAF50;
+        }
+        .history-colors {
+            display: flex;
+            gap: 5px;
+            margin-top: 5px;
+        }
+        .history-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 3px;
         }
     </style>
 </head>
 <body>
-    <div id="colorBox"></div>
-    <h2 id="colorName"></h2>
-    <input type="text" id="userNameInput" placeholder="Введите ваше имя">
-    <button onclick="startSpin()">Крутить</button>
-    <div id="history"></div>
+    <div class="container">
+        <h1>Рандомайзер 7 цветов</h1>
+        
+        <div class="input-group">
+            <label for="name">Введите ваше имя:</label>
+            <input type="text" id="name" placeholder="Ваше имя">
+        </div>
+        
+        <button id="generateBtn">Начать</button>
+        
+        <div id="colorsContainer" class="colors-container"></div>
+        
+        <div class="history">
+            <h2>История генераций</h2>
+            <div id="historyList"></div>
+        </div>
+    </div>
 
     <script>
-        // Массив из 7 основных цветов
-        const colors = [
-            { name: 'Красный', code: '#FF0000' },
-            { name: 'Оранжевый', code: '#FFA500' },
-            { name: 'Жёлтый', code: '#FFFF00' },
-            { name: 'Зелёный', code: '#008000' },
-            { name: 'Голубой', code: '#00BFFF' },
-            { name: 'Синий', code: '#0000FF' },
-            { name: 'Фиолетовый', code: '#800080' }
-        ];
-
-// Загружаем историю из localStorage
-let history = JSON.parse(localStorage.getItem('colorHistory')) || [];
-
-let spinning = false;
-let spinInterval;
-let finalColorIndex;
-let startTime;
-
-function startSpin() {
-    if (spinning) return;
-    
-    const userName = document.getElementById('userNameInput').value;
-    if (!userName) {
-        alert('Пожалуйста, введите ваше имя');
-        return;
-    }
-    
-    spinning = true;
-    finalColorIndex = Math.floor(Math.random() * colors.length);
-    startTime = Date.now();
-    
-    spinInterval = setInterval(() => {
-        const randomIndex = Math.floor(Math.random() * colors.length);
-        document.getElementById('colorBox').style.backgroundColor = colors[randomIndex].code;
-        
-        if (Date.now() - startTime > 3000) {
-            clearInterval(spinInterval);
-            document.getElementById('colorBox').style.backgroundColor = colors[finalColorIndex].code;
-            document.getElementById('colorName').innerText = colors[finalColorIndex].name;
+        document.getElementById('generateBtn').addEventListener('click', function() {
+            const name = document.getElementById('name').value.trim();
+            if (!name) {
+                alert('Пожалуйста, введите ваше имя');
+                return;
+            }
             
-            // Добавляем запись в историю
-            history.push({
-                name: userName,
-                color: colors[finalColorIndex].name,
-                date: new Date()
+            // Генерируем 7 случайных цветов
+            const colors = [];
+            for (let i = 0; i < 7; i++) {
+                colors.push(generateRandomColor());
+            }
+            
+            // Отображаем цвета
+            displayColors(colors);
+            
+            // Сохраняем в историю
+            saveToHistory(name, colors);
+        });
+        
+        function generateRandomColor() {
+            const letters = '0123456789ABCDEF';
+            let color = '#';
+            for (let i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        }
+        
+        function displayColors(colors) {
+            const container = document.getElementById('colorsContainer');
+            container.innerHTML = '';
+            
+            colors.forEach((color, index) => {
+                const colorBox = document.createElement('div');
+                colorBox.className = 'color-box';
+                colorBox.style.backgroundColor = color;
+                colorBox.textContent = color;
+                container.appendChild(colorBox);
             });
+        }
+        
+        function saveToHistory(name, colors) {
+            const historyList = document.getElementById('historyList');
+            const historyItem = document.createElement('div');
+            historyItem.className = 'history-item';
+            
+            const date = new Date().toLocaleString();
+            historyItem.innerHTML = `
+                <strong>${name}</strong> - ${date}
+                <div class="history-colors">
+                    ${colors.map(color => `<div class="history-color" style="background-color: ${color}"></div>`).join('')}
+                </div>
+            `;
+            
+            // Добавляем новую запись в начало истории
+            historyList.insertBefore(historyItem, historyList.firstChild);
+            
+            // Сохраняем в localStorage
+            saveToLocalStorage(name, colors, date);
+        }
+        
+        function saveToLocalStorage(name, colors, date) {
+            let history = JSON.parse(localStorage.getItem('colorHistory')) || [];
+            
+            // Ограничиваем историю последними 10 записями
+            history.unshift({ name, colors, date });
+            if (history.length > 10) {
+                history = history.slice(0, 10);
+            }
             
             localStorage.setItem('colorHistory', JSON.stringify(history));
-            updateHistory();
-            spinning = false;
         }
-    }, 100);
-}
-
-function updateHistory() {
-    const historyDiv = document.getElementById('history');
-    historyDiv.innerHTML = '';
-    
-    history.forEach(entry => {
-        const div = document.createElement('div');
-        div.innerText = `${entry.name}: ${entry.color} (${entry.date.toLocaleString()})`;
-        historyDiv.appendChild(div);
-    });
-}
-
-</script>
+        
+        // Загружаем историю при загрузке страницы
+        window.addEventListener('load', function() {
+            const history = JSON.parse(localStorage.getItem('colorHistory')) || [];
+            const historyList = document.getElementById('historyList');
+            
+            history.forEach(item => {
+                const historyItem = document.createElement('div');
+                historyItem.className = 'history-item';
+                historyItem.innerHTML = `
+                    <strong>${item.name}</strong> - ${item.date}
+                    <div class="history-colors">
+                        ${item.colors.map(color => `<div class="history-color" style="background-color: ${color}"></div>`).join('')}
+                    </div>
+                `;
+                historyList.appendChild(historyItem);
+            });
+        });
+    </script>
 </body>
 </html>
