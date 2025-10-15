@@ -3,428 +3,204 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Рандомайзер цвета</title>
+    <title>Генератор Основных Цветов</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        
         body {
-            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
-            color: #333;
-            min-height: 100vh;
-            padding: 20px;
+            font-family: sans-serif;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
         }
-        
         .container {
-            max-width: 800px;
-            width: 100%;
-            background-color: rgba(255, 255, 255, 0.95);
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            overflow: hidden;
-        }
-        
-        header {
-            background: linear-gradient(90deg, #4b6cb7 0%, #182848 100%);
-            color: white;
-            padding: 25px;
             text-align: center;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            width: 90%;
         }
-        
-        h1 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-        }
-        
-        .subtitle {
-            font-size: 1.1rem;
-            opacity: 0.9;
-        }
-        
-        .content {
-            padding: 30px;
-        }
-        
-        .input-section {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-        
-        .input-group {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-        
-        label {
-            font-weight: 600;
-            color: #444;
-            font-size: 1.1rem;
-        }
-        
-        input[type="text"] {
-            padding: 15px;
-            border: 2px solid #ddd;
-            border-radius: 10px;
-            font-size: 1rem;
-            transition: all 0.3s;
-        }
-        
-        input[type="text"]:focus {
-            border-color: #4b6cb7;
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(75, 108, 183, 0.2);
-        }
-        
-        button {
-            background: linear-gradient(90deg, #4b6cb7 0%, #182848 100%);
-            color: white;
-            border: none;
-            padding: 16px 30px;
-            border-radius: 10px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-        }
-        
-        button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
-        }
-        
-        button:active {
-            transform: translateY(1px);
-        }
-        
-        .result-section {
-            margin-bottom: 30px;
-            text-align: center;
-        }
-        
-        .color-display {
+        #color-box {
             width: 200px;
             height: 200px;
-            margin: 0 auto 20px;
-            border-radius: 15px;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 1.2rem;
+            border: 2px solid #333;
+            margin: 20px auto;
+            border-radius: 4px;
+        }
+        #current-color-name {
+            margin-top: 10px;
+            font-size: 1.2em;
             font-weight: bold;
-            color: white;
-            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
-            transition: all 0.5s;
         }
-        
-        .color-info {
-            font-size: 1.3rem;
-            font-weight: 600;
-            margin-top: 15px;
-            color: #444;
+        .input-group {
+            margin-bottom: 15px;
         }
-        
-        .history-section {
-            background-color: #f8f9fa;
-            border-radius: 15px;
-            padding: 25px;
-            box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.05);
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
         }
-        
-        .history-title {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
+        .input-group input {
+            padding: 8px;
+            width: 200px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
         }
-        
-        .history-title h2 {
-            color: #444;
-            font-size: 1.5rem;
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            transition: background-color 0.3s;
         }
-        
-        .clear-history {
-            background: linear-gradient(90deg, #ff416c 0%, #ff4b2b 100%);
-            padding: 8px 15px;
-            font-size: 0.9rem;
+        button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
         }
-        
-        .history-list {
+        #history {
+            margin-top: 20px;
+            width: 100%;
+        }
+        #history h3 {
+            margin-bottom: 10px;
+        }
+        #history-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
             max-height: 300px;
             overflow-y: auto;
-            padding-right: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            text-align: left;
         }
-        
-        .history-item {
+        #history-list li {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
             display: flex;
             align-items: center;
-            gap: 15px;
-            padding: 15px;
-            background-color: white;
-            border-radius: 10px;
-            margin-bottom: 15px;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
-            transition: transform 0.2s;
+            flex-wrap: wrap;
         }
-        
-        .history-item:hover {
-            transform: translateX(5px);
+        #history-list li:last-child {
+            border-bottom: none;
         }
-        
-        .history-color {
-            width: 50px;
-            height: 50px;
-            border-radius: 8px;
+        .color-dot {
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            margin-right: 10px;
+            border: 1px solid #ccc;
             flex-shrink: 0;
-            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
         }
-        
-        .history-details {
+        .color-info {
+            display: flex;
+            flex-direction: column;
             flex-grow: 1;
         }
-        
-        .history-name {
-            font-weight: 600;
-            color: #444;
-            font-size: 1.1rem;
+        .color-info span {
+            font-size: 12px;
+            color: #555;
         }
-        
-        .history-date {
-            color: #777;
-            font-size: 0.9rem;
-            margin-top: 5px;
-        }
-        
-        .history-hex {
-            font-weight: 600;
-            color: #444;
-            font-size: 1.1rem;
-        }
-        
-        .empty-history {
-            text-align: center;
-            color: #777;
-            padding: 30px;
-            font-style: italic;
-        }
-        
-        footer {
-            text-align: center;
-            padding: 20px;
-            color: white;
-            margin-top: 20px;
-            font-size: 0.9rem;
-        }
-        
-        /* Стили для скроллбара */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        
-        ::-webkit-scrollbar-track {
-            background: #f1f1f1;
-            border-radius: 10px;
-        }
-        
-        ::-webkit-scrollbar-thumb {
-            background: #4b6cb7;
-            border-radius: 10px;
-        }
-        
-        ::-webkit-scrollbar-thumb:hover {
-            background: #182848;
-        }
-        
-        @media (max-width: 600px) {
-            .container {
-                border-radius: 15px;
-            }
-            
-            h1 {
-                font-size: 2rem;
-            }
-            
-            .content {
-                padding: 20px;
-            }
-            
-            .color-display {
-                width: 150px;
-                height: 150px;
-            }
+        .timestamp {
+            font-size: 11px;
+            color: #888;
+            margin-top: 3px;
         }
     </style>
 </head>
 <body>
+
     <div class="container">
-        <header>
-            <h1>Рандомайзер цвета</h1>
-            <p class="subtitle">Генератор случайных цветов с сохранением истории</p>
-        </header>
-        
-        <div class="content">
-            <div class="input-section">
-                <div class="input-group">
-                    <label for="name">Введите ваше имя:</label>
-                    <input type="text" id="name" placeholder="Ваше имя">
-                </div>
-                
-                <button id="generateBtn">Сгенерировать цвет</button>
-            </div>
-            
-            <div class="result-section">
-                <div class="color-display" id="colorDisplay">Нажмите кнопку</div>
-                <div class="color-info" id="colorInfo">Ожидание генерации...</div>
-            </div>
-            
-            <div class="history-section">
-                <div class="history-title">
-                    <h2>История генераций</h2>
-                    <button class="clear-history" id="clearHistoryBtn">Очистить историю</button>
-                </div>
-                
-                <div class="history-list" id="historyList">
-                    <div class="empty-history">История пуста</div>
-                </div>
-            </div>
+        <h1>Генератор Основных Цветов</h1>
+
+        <div class="input-group">
+            <label for="userName">Ваше имя:</label>
+            <input type="text" id="userName" placeholder="Введите ваше имя">
+        </div>
+
+        <div id="color-box"></div>
+        <div id="current-color-name"></div>
+        <button id="startButton">Следующий цвет</button>
+        <div id="history">
+            <h3>История поиска</h3>
+            <ul id="history-list"></ul>
         </div>
     </div>
-    
-    <footer>
-        <p>Рандомайзер цвета &copy; 2023</p>
-    </footer>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const nameInput = document.getElementById('name');
-            const generateBtn = document.getElementById('generateBtn');
-            const clearHistoryBtn = document.getElementById('clearHistoryBtn');
-            const colorDisplay = document.getElementById('colorDisplay');
-            const colorInfo = document.getElementById('colorInfo');
-            const historyList = document.getElementById('historyList');
-            
-            // Загружаем историю при загрузке страницы
-            loadHistory();
-            
-            // Обработчик для кнопки генерации
-            generateBtn.addEventListener('click', function() {
-                const name = nameInput.value.trim();
-                
-                if (!name) {
-                    alert('Пожалуйста, введите ваше имя');
-                    return;
-                }
-                
-                // Генерируем случайный цвет
-                const color = generateRandomColor();
-                
-                // Отображаем цвет
-                displayColor(color);
-                
-                // Сохраняем в историю
-                saveToHistory(name, color);
-            });
-            
-            // Обработчик для кнопки очистки истории
-            clearHistoryBtn.addEventListener('click', function() {
-                if (confirm('Вы уверены, что хотите очистить историю?')) {
-                    clearHistory();
-                }
-            });
-            
-            // Функция генерации случайного цвета
-            function generateRandomColor() {
-                const letters = '0123456789ABCDEF';
-                let color = '#';
-                for (let i = 0; i < 6; i++) {
-                    color += letters[Math.floor(Math.random() * 16)];
-                }
-                return color;
+        const colors = [
+            { name: 'Красный', hex: '#FF0000' },
+            { name: 'Оранжевый', hex: '#FFA500' },
+            { name: 'Жёлтый', hex: '#FFFF00' },
+            { name: 'Зелёный', hex: '#008000' },
+            { name: 'Голубой', hex: '#00BFFF' },
+            { name: 'Синий', hex: '#0000FF' },
+            { name: 'Фиолетовый', hex: '#800080' }
+        ];
+
+        const userNameInput = document.getElementById('userName');
+        const startButton = document.getElementById('startButton');
+        const colorBox = document.getElementById('color-box');
+        const currentColorName = document.getElementById('current-color-name');
+        const historyList = document.getElementById('history-list');
+
+        function updateColorAndHistory() {
+            const userName = userNameInput.value.trim();
+            if (userName === '') {
+                alert('Пожалуйста, введите ваше имя, чтобы сгенерировать цвет.');
+                return;
             }
-            
-            // Функция отображения цвета
-            function displayColor(color) {
-                colorDisplay.style.backgroundColor = color;
-                colorDisplay.textContent = color;
-                colorInfo.textContent = `Сгенерирован цвет: ${color}`;
-                
-                // Добавляем анимацию
-                colorDisplay.style.transform = 'scale(1.05)';
-                setTimeout(() => {
-                    colorDisplay.style.transform = 'scale(1)';
-                }, 300);
+
+            // Рандомно выбираем цвет из массива
+            const randomIndex = Math.floor(Math.random() * colors.length);
+            const newColor = colors[randomIndex];
+
+            colorBox.style.backgroundColor = newColor.hex;
+            currentColorName.textContent = newColor.name;
+
+            // Получаем текущую дату и время
+            const now = new Date();
+            const dateString = now.toLocaleDateString('ru-RU');
+            const timeString = now.toLocaleTimeString('ru-RU');
+
+            const listItem = document.createElement('li');
+            const colorDot = document.createElement('span');
+            colorDot.className = 'color-dot';
+            colorDot.style.backgroundColor = newColor.hex;
+            listItem.appendChild(colorDot);
+
+            const colorInfo = document.createElement('div');
+            colorInfo.className = 'color-info';
+            colorInfo.innerHTML = `
+                <strong>${userName}</strong>
+                <span>Цвет: ${newColor.name}</span>
+                <div class="timestamp">${dateString} ${timeString}</div>
+            `;
+            listItem.appendChild(colorInfo);
+
+            historyList.prepend(listItem);
+        }
+
+        startButton.addEventListener('click', updateColorAndHistory);
+
+        function toggleButtonState() {
+            startButton.disabled = userNameInput.value.trim() === '';
+        }
+        userNameInput.addEventListener('input', toggleButtonState);
+        
+        window.onload = function() {
+            toggleButtonState();
+            if (!startButton.disabled) {
+                updateColorAndHistory();
             }
-            
-            // Функция сохранения в историю
-            function saveToHistory(name, color) {
-                const date = new Date().toLocaleString();
-                const historyItem = {
-                    name,
-                    color,
-                    date
-                };
-                
-                // Получаем текущую историю из localStorage
-                let history = JSON.parse(localStorage.getItem('colorHistory')) || [];
-                
-                // Добавляем новую запись в начало
-                history.unshift(historyItem);
-                
-                // Ограничиваем историю 15 записями
-                if (history.length > 15) {
-                    history = history.slice(0, 15);
-                }
-                
-                // Сохраняем обратно в localStorage
-                localStorage.setItem('colorHistory', JSON.stringify(history));
-                
-                // Обновляем отображение истории
-                loadHistory();
-            }
-            
-            // Функция загрузки истории
-            function loadHistory() {
-                const history = JSON.parse(localStorage.getItem('colorHistory')) || [];
-                historyList.innerHTML = '';
-                
-                if (history.length === 0) {
-                    historyList.innerHTML = '<div class="empty-history">История пуста</div>';
-                    return;
-                }
-                
-                history.forEach(item => {
-                    const historyItem = document.createElement('div');
-                    historyItem.className = 'history-item';
-                    historyItem.innerHTML = `
-                        <div class="history-color" style="background-color: ${item.color}"></div>
-                        <div class="history-details">
-                            <div class="history-name">${item.name}</div>
-                            <div class="history-date">${item.date}</div>
-                        </div>
-                        <div class="history-hex">${item.color}</div>
-                    `;
-                    historyList.appendChild(historyItem);
-                });
-            }
-            
-            // Функция очистки истории
-            function clearHistory() {
-                localStorage.removeItem('colorHistory');
-                loadHistory();
-            }
-        });
+        };
     </script>
+
 </body>
 </html>
